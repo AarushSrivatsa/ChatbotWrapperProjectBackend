@@ -1,0 +1,17 @@
+asyncpg
+sqlalchemy[asyncio]
+langchain
+langchain-groq
+pydantic
+dotenv
+argon2-cffi
+python-jose
+fastapi
+uvicorn
+langchain-tavily
+langchain-ollama
+langchain-pinecone
+pinecone
+langchain_text_splitters
+langchain_community
+langchain_classic
