@@ -26,7 +26,7 @@ The system is functional end-to-end and is currently being refactored for better
 
 ---
 
-## RAG Pipeline (Optional)
+## RAG Pipeline
 
 The backend includes an optional retrieval pipeline that can be used during message generation.
 
