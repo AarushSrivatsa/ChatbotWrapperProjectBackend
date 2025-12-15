@@ -1,9 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from pydantic import BaseModel
-from database.models import UserModel
-from database.operations import get_db
+from database.initializations import UserModel
+from database.initializations import get_db
 from routers.auth import hash_password, verify_password, create_access_token
 from schemas import UserRequest, Token
 
@@ -44,8 +43,8 @@ async def login(user_data: UserRequest, db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=401, detail="Invalid email or password")
     
     # creating access tokens if valid
-    token = create_access_token({"sub": str(user.id)})
-    return {"access_token": token, "token_type": "bearer"}
+    return create_access_token({"sub": str(user.id)})
+
     
 
 

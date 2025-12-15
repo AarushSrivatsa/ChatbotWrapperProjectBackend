@@ -3,8 +3,7 @@ from langchain.agents import create_agent
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 from AI.universal_tools import universal_tools
 from AI.rag import make_query_rag_tool
-from functools import partial
-from langchain.tools import tool
+from database.initializations import MessageModel
 
 llm = ChatGroq(model="moonshotai/kimi-k2-instruct-0905", temperature=0.2)
 
@@ -29,9 +28,11 @@ Always prioritize accuracy and cite your sources when making factual claims."""
 async def get_ai_response(
     user_message: str,
     conversation_id: int,
-    chat_history: list  # List of HumanMessage/AIMessage objects
+    messages: list  # List of HumanMessage/AIMessage objects
 ) -> str:
     """Get AI response with tools"""
+
+    chat_history = db_to_langchain(messages=messages)
     
     # Create RAG tools for this conversation
     query = make_query_rag_tool(conversation_id=conversation_id)
@@ -54,3 +55,13 @@ async def get_ai_response(
         return ai_message_content
     except Exception as e:
         return f"I encountered an error: {str(e)}"
+    
+def db_to_langchain(messages: list[MessageModel]):
+    chat_history = []
+    for message in messages:
+        if message.role == "assistant":
+            chat_history.append(AIMessage(content=message.content))
+        elif message.role == "user":
+            chat_history.append(HumanMessage(content=message.content))
+    return chat_history
+    

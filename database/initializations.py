@@ -41,5 +41,10 @@ async def create_tables():
         await conn.run_sync(Base.metadata.create_all)
     print("✅ Tables created in Supabase!")
 
+async def get_db():
+    async with AsyncSessionLocal() as session:
+        yield session
+    
+
 if __name__ == "__main__":
     asyncio.run(create_tables())
