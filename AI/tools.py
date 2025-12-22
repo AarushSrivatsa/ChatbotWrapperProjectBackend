@@ -1,4 +1,4 @@
-from langchain_tavily import TavilySearch, TavilyCrawl, TavilyExtract
+from langchain_tavily import TavilySearch, TavilyCrawl, TavilyExtract, TavilyMap
 from langchain.tools import tool
 from datetime import datetime
 from config import TAVILY_API_KEY
@@ -29,9 +29,16 @@ extract = TavilyExtract(
     include_images=False,             
 )
 
+mapsite = TavilyMap(
+    max_depth=3,
+    max_breadth=25,
+    limit=150,
+    allow_external=False,
+)
+
 @tool
 def getDateAndTime():
     """Returns The Current Date & Time (Timezone IST)"""
     return datetime.now()
 
-universal_tools = [getDateAndTime, search, crawl, extract]
+universal_tools = [getDateAndTime, search, crawl, extract, mapsite]

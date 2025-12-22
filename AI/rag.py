@@ -1,5 +1,4 @@
 from dotenv import load_dotenv
-from langchain_ollama import OllamaEmbeddings
 from langchain_pinecone import PineconeVectorStore
 from pinecone import Pinecone, ServerlessSpec
 from uuid import uuid4
@@ -10,20 +9,11 @@ from langchain.tools import tool
 import os
 import tempfile
 from langchain_community.document_loaders import PyPDFLoader, Docx2txtLoader, TextLoader
+from config import INDEX_NAME, EMBEDDING_MODEL, CHUNK_SIZE, CHUNK_OVERLAP, SEPARATORS, BASE_K, TOP_N, USE_RERANKING, RERANK_MODEL
 
 FlashrankRerank.model_rebuild()
 load_dotenv()
 pc = Pinecone()
-
-INDEX_NAME = "chatbot-wrapper-project"
-EMBEDDING_MODEL = OllamaEmbeddings(model="nomic-embed-text:v1.5")
-CHUNK_SIZE = 400
-CHUNK_OVERLAP = 75
-SEPARATORS = ["\n\n", "\n", ".", ",", " ", ""]
-BASE_K = 20
-TOP_N = 5
-USE_RERANKING = False
-RERANK_MODEL = "ms-marco-MiniLM-L-12-v2"
 
 if not pc.has_index(INDEX_NAME):
     pc.create_index(

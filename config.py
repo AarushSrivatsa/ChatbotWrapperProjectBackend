@@ -1,11 +1,25 @@
 import os
 from dotenv import load_dotenv
+from langchain_ollama import OllamaEmbeddings
 load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
-SECRET_KEY = os.getenv("SECRET_KEY", "change-this-secret-key-in-production")
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_HOURS = 24
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
+
+# JWT Token Settings
+SECRET_KEY = os.getenv("SECRET_KEY", "change-this-secret-key-in-production")
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_HOURS = 24
+
+# AI Settings
+INDEX_NAME = "chatbot-wrapper-project"
+EMBEDDING_MODEL = OllamaEmbeddings(model="nomic-embed-text:v1.5")
+CHUNK_SIZE = 400
+CHUNK_OVERLAP = 75
+SEPARATORS = ["\n\n", "\n", ".", ",", " ", ""]
+BASE_K = 20
+TOP_N = 5
+USE_RERANKING = False
+RERANK_MODEL = "ms-marco-MiniLM-L-12-v2"
