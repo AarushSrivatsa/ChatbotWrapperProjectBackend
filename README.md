@@ -71,14 +71,12 @@ This project provides a comprehensive backend API that manages users, conversati
 ```text
 ChatbotWrapperProject/
 ├── AI/
-│   ├── __pycache__/
 │   ├── __init__.py
 │   ├── bot.py
 │   ├── rag.py
 │   └── tools.py
 │
 ├── database/
-│   ├── __pycache__/
 │   ├── __init__.py
 │   ├── conversations.py
 │   ├── initializations.py
@@ -86,7 +84,6 @@ ChatbotWrapperProject/
 │   └── user.py
 │
 ├── routers/
-│   ├── __pycache__/
 │   ├── __init__.py
 │   ├── auth.py
 │   ├── conversation.py
