@@ -37,7 +37,7 @@ This project provides a comprehensive backend API that manages users, conversati
 
 ### Quad Web Intelligence (Tavily):
 - Search - Real-time queries with AI-ranked results
-- Extract - Clean content from multiple URLs
+- Extract - Clean and get content from given URL
 - Crawl - Graph-based traversal with natural language instructions
 - Map - Complete website structure visualization
 
@@ -106,7 +106,7 @@ ChatbotWrapperProject/
 
 ### Prerequisites
 
-- Python 3.9+
+- Python 3.12+
 - PostgreSQL database (or Supabase account)
 - Pinecone account
 - Groq API key
