@@ -35,11 +35,11 @@ This project provides a comprehensive backend API that manages users, conversati
 - Similarity-based retrieval with BASE_K=20, refined to TOP_N=5
 - Conversation-scoped vector storage in Pinecone
 
-### Web Intelligence
-- **Tavily integration** for real-time web search
-- Website crawling and content extraction
-- Search result processing and synthesis
-- Seamless integration with conversation context
+### Quad Web Intelligence (Tavily):
+- Search - Real-time queries with AI-ranked results
+- Extract - Clean content from multiple URLs
+- Crawl - Graph-based traversal with natural language instructions
+- Map - Complete website structure visualization
 
 ### Message System
 - Text message support
