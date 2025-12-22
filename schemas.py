@@ -19,7 +19,7 @@ class ConvoResponse(BaseModel):
 
 class MessageResponse(BaseModel):
     id: int
-    role: str  # "user" or "assistant"
+    role: str
     content: str
     created_at: str
 

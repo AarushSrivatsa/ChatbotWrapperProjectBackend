@@ -14,8 +14,7 @@ async def get_conversation_messages(db: AsyncSession, conversation_id: int, user
     
     if not convo:
         return None
-    
-    # Get all messages
+
     messages_result = await db.execute(
         select(MessageModel)
         .where(MessageModel.conversation_id == conversation_id)

@@ -2,19 +2,19 @@ from dotenv import load_dotenv
 from langchain_ollama import OllamaEmbeddings
 from langchain_pinecone import PineconeVectorStore
 from pinecone import Pinecone, ServerlessSpec
-from langchain_core.documents import Document
 from uuid import uuid4
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_compressors import FlashrankRerank
 from langchain_classic.retrievers.contextual_compression import ContextualCompressionRetriever
 from langchain.tools import tool
+import os
+import tempfile
+from langchain_community.document_loaders import PyPDFLoader, Docx2txtLoader, TextLoader
+
 FlashrankRerank.model_rebuild()
-
 load_dotenv()
-
 pc = Pinecone()
 
-# Global settings
 INDEX_NAME = "chatbot-wrapper-project"
 EMBEDDING_MODEL = OllamaEmbeddings(model="nomic-embed-text:v1.5")
 CHUNK_SIZE = 400
@@ -22,10 +22,9 @@ CHUNK_OVERLAP = 75
 SEPARATORS = ["\n\n", "\n", ".", ",", " ", ""]
 BASE_K = 20
 TOP_N = 5
-USE_RERANKING = True
+USE_RERANKING = False
 RERANK_MODEL = "ms-marco-MiniLM-L-12-v2"
 
-# Ensure index exists
 if not pc.has_index(INDEX_NAME):
     pc.create_index(
         name=INDEX_NAME,
@@ -35,9 +34,8 @@ if not pc.has_index(INDEX_NAME):
     )
 index = pc.Index(INDEX_NAME)
 
-
-def add_to_rag(conversation_id: int, text: str) -> str:
-    """Insert text into vector database for a specific conversation."""
+def add_to_rag(conversation_id: int, file_bytes: bytes, filename: str) -> str:
+    """Insert file into vector database for a specific conversation."""
     namespace = str(conversation_id)
     
     vector_store = PineconeVectorStore(
@@ -46,18 +44,44 @@ def add_to_rag(conversation_id: int, text: str) -> str:
         namespace=namespace
     )
     
-    splitter = RecursiveCharacterTextSplitter(
-        chunk_size=CHUNK_SIZE,
-        chunk_overlap=CHUNK_OVERLAP,
-        separators=SEPARATORS
-    ) 
+    with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(filename)[1]) as tmp_file:
+        tmp_file.write(file_bytes)
+        tmp_path = tmp_file.name
     
-    doc = [Document(page_content=text)]
-    documents = splitter.split_documents(doc)
-    uuids = [str(uuid4()) for _ in range(len(documents))]
-    vector_store.add_documents(documents=documents, ids=uuids)
+    try:
+        filename_lower = filename.lower()
+        
+        if filename_lower.endswith('.pdf'):
+            loader = PyPDFLoader(tmp_path)
+        elif filename_lower.endswith('.docx'):
+            loader = Docx2txtLoader(tmp_path)
+        elif filename_lower.endswith('.txt'):
+            loader = TextLoader(tmp_path)
+        else:
+            raise ValueError(f"Unsupported file type: {filename}")
+        
+        documents = loader.load()
+        
+        splitter = RecursiveCharacterTextSplitter(
+            chunk_size=CHUNK_SIZE,
+            chunk_overlap=CHUNK_OVERLAP,
+            separators=SEPARATORS
+        )
+        
+        split_docs = splitter.split_documents(documents)
+        
+        for doc in split_docs:
+            doc.metadata['source'] = filename
+            doc.metadata['conversation_id'] = conversation_id
+        
+        uuids = [str(uuid4()) for _ in range(len(split_docs))]
+        vector_store.add_documents(documents=split_docs, ids=uuids)
+        
+        return f"Insertion Successful: {len(split_docs)} chunks created from {filename}"
     
-    return f"Insertion Successful: {len(documents)} chunks created"
+    finally:
+        if os.path.exists(tmp_path):
+            os.remove(tmp_path)
 
 def make_query_rag_tool(conversation_id: int):
 

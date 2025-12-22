@@ -1,7 +1,7 @@
 from langchain_groq import ChatGroq
 from langchain.agents import create_agent
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
-from AI.universal_tools import universal_tools
+from AI.tools import universal_tools
 from AI.rag import make_query_rag_tool
 from database.initializations import MessageModel
 
@@ -28,29 +28,22 @@ Always prioritize accuracy and cite your sources when making factual claims."""
 async def get_ai_response(
     user_message: str,
     conversation_id: int,
-    messages: list  # List of HumanMessage/AIMessage objects
+    messages: list
 ) -> str:
     """Get AI response with tools"""
 
     chat_history = db_to_langchain(messages=messages)
-    
-    # Create RAG tools for this conversation
     query = make_query_rag_tool(conversation_id=conversation_id)
-    
-    # Combine all tools
     all_tools = universal_tools + [query]
-    
-    # Create agent
     agent = create_agent(model=llm, tools=all_tools)
-    
-    # Build full message history
     full_history = [system_prompt] + chat_history + [HumanMessage(content=user_message)]
-    
-    # Get AI response
     config = {"recursion_limit": 10}
     
     try:
-        response = await agent.ainvoke({"messages": full_history}, config=config)
+        response = await agent.ainvoke({"messages": full_history}, config={
+        "recursion_limit": 10,
+        "return_intermediate_steps": True
+    })
         ai_message_content = response["messages"][-1].content
         return ai_message_content
     except Exception as e:

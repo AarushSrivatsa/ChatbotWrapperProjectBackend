@@ -5,7 +5,7 @@ from sqlalchemy.sql import func
 import asyncio
 from config import DATABASE_URL
 
-engine = create_async_engine(url=DATABASE_URL,echo=True)
+engine = create_async_engine(url=DATABASE_URL,echo=True,pool_pre_ping=True,pool_recycle=1800,pool_size=5,max_overflow=10, )
 AsyncSessionLocal = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 Base = declarative_base()
 
@@ -44,7 +44,6 @@ async def create_tables():
 async def get_db():
     async with AsyncSessionLocal() as session:
         yield session
-    
 
 if __name__ == "__main__":
     asyncio.run(create_tables())

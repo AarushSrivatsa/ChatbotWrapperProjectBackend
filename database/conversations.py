@@ -19,7 +19,7 @@ async def get_user_conversations(db: AsyncSession, user_id: int):
     result = await db.execute(
         select(ConvoModel)
         .where(ConvoModel.user_id == user_id)
-        .order_by(ConvoModel.created_at.desc())  # Use created_at to avoid null issues
+        .order_by(ConvoModel.created_at.desc())
     )
     convos = result.scalars().all()
     
