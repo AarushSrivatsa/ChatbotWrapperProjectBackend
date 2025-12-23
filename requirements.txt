@@ -21,4 +21,3 @@ docx2txt
 unstructured
 pillow
 pytesseract
-psycopg2
