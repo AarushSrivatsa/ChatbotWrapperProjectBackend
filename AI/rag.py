@@ -11,7 +11,6 @@ import tempfile
 from langchain_community.document_loaders import PyPDFLoader, Docx2txtLoader, TextLoader
 from config import INDEX_NAME, EMBEDDING_MODEL, CHUNK_SIZE, CHUNK_OVERLAP, SEPARATORS, BASE_K, TOP_N, USE_RERANKING, RERANK_MODEL
 
-FlashrankRerank.model_rebuild()
 load_dotenv()
 pc = Pinecone()
 
