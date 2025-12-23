@@ -22,7 +22,6 @@ async def get_user_conversations(db: AsyncSession, user_id: int):
         .order_by(ConvoModel.created_at.desc())
     )
     convos = result.scalars().all()
-    
     return [
         {
             "id": c.id,
@@ -42,15 +41,11 @@ async def delete_conversation_with_cleanup(db: AsyncSession, conversation_id: in
         )
     )
     convo = result.scalar_one_or_none()
-    
     if not convo:
         return None
-    
     await db.execute(
         delete(MessageModel).where(MessageModel.conversation_id == conversation_id)
     )
-    
     await db.delete(convo)
     await db.commit()
-    
     return {"message": "Conversation deleted"}
