@@ -1,6 +1,11 @@
+# External tools
 from langchain_tavily import TavilySearch, TavilyCrawl, TavilyExtract, TavilyMap
 from langchain.tools import tool
+
+# Stdlib
 from datetime import datetime
+
+# App config
 from config import TAVILY_API_KEY
 
 search = TavilySearch(

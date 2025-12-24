@@ -1,6 +1,12 @@
+# Stdlib
 import os
+
+# Env
 from dotenv import load_dotenv
+
+# Embeddings
 from langchain_ollama import OllamaEmbeddings
+
 load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")

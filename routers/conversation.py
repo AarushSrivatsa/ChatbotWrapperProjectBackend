@@ -1,8 +1,15 @@
+# FastAPI
 from fastapi import APIRouter, Depends, HTTPException
+
+# Database
 from sqlalchemy.ext.asyncio import AsyncSession
-from schemas import ConvoCreate, ConvoResponse
 from database.initializations import get_db
 from database.conversations import create_conversation, get_user_conversations, delete_conversation_with_cleanup
+
+# Schemas
+from schemas import ConvoCreate, ConvoResponse
+
+# Auth & AI
 from routers.auth import get_current_user
 from AI.rag import clear_rag
 

@@ -1,6 +1,9 @@
-from database.initializations import ConvoModel,MessageModel
+# Database models
+from database.initializations import ConvoModel, MessageModel
+
+# SQLAlchemy
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select,delete
+from sqlalchemy import select, delete
 
 async def create_conversation(db: AsyncSession, user_id: int, title: str):
     new_convo = ConvoModel(user_id=user_id, title=title)

@@ -1,8 +1,13 @@
+# LangChain / LLM
 from langchain_groq import ChatGroq
 from langchain.agents import create_agent
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
-from AI.tools import universal_tools
+
+# AI logic (tools + RAG)
 from AI.rag import make_query_rag_tool
+from AI.tools import universal_tools
+
+# Database
 from database.initializations import MessageModel
 
 llm = ChatGroq(model="moonshotai/kimi-k2-instruct-0905", temperature=0.2)

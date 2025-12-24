@@ -1,17 +1,27 @@
+# Env & stdlib
 from dotenv import load_dotenv
-from langchain_pinecone import PineconeVectorStore
-from pinecone import Pinecone, ServerlessSpec
-from uuid import uuid4
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.document_compressors import FlashrankRerank
-from langchain_classic.retrievers.contextual_compression import ContextualCompressionRetriever
-from langchain.tools import tool
 import os
 import tempfile
+from uuid import uuid4
+
+# Vector DB (Pinecone)
+from pinecone import Pinecone, ServerlessSpec
+from langchain_pinecone import PineconeVectorStore
+
+# LangChain core components
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain.tools import tool
+
+# Document loading
 from langchain_community.document_loaders import PyPDFLoader, Docx2txtLoader, TextLoader
+
+# Retrieval + reranking
+from langchain_community.document_compressors import FlashrankRerank
+from langchain_classic.retrievers.contextual_compression import ContextualCompressionRetriever
+
+# App config
 from config import INDEX_NAME, EMBEDDING_MODEL, CHUNK_SIZE, CHUNK_OVERLAP, SEPARATORS, BASE_K, TOP_N, USE_RERANKING, RERANK_MODEL
 
-load_dotenv()
 pc = Pinecone()
 
 if not pc.has_index(INDEX_NAME):

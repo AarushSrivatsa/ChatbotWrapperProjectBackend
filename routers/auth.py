@@ -1,15 +1,23 @@
+# Stdlib
 from datetime import datetime, timedelta, timezone
 
+# Security / auth
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
 from jose import jwt
+
+# FastAPI
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+
+# Database
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
+# App config & models
 from config import ACCESS_TOKEN_EXPIRE_HOURS, SECRET_KEY, ALGORITHM
 from database.initializations import get_db, UserModel
+
 ph = PasswordHasher()
 security = HTTPBearer()
 

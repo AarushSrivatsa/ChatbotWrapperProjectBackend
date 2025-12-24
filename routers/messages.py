@@ -1,13 +1,24 @@
-from fastapi import APIRouter, Depends, HTTPException
-from fastapi import UploadFile, File
-from sqlalchemy import select
+# FastAPI
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
+
+# SQLAlchemy
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
+
+# Schemas
 from schemas import MessageResponse, ChatRequest
-from database.initializations import get_db,ConvoModel,AsyncSessionLocal
+
+# Database
+from database.initializations import get_db, ConvoModel, AsyncSessionLocal
 from database.messages import get_conversation_messages, get_recent_messages, save_chat_messages, verify_conversation_access
+
+# Auth
 from routers.auth import get_current_user
+
+# AI
 from AI.bot import get_ai_response
 from AI.rag import add_to_rag
+
 router = APIRouter(prefix="/conversations/{conversation_id}/messages", tags=["messages"])
 message_limit = 25 
 
