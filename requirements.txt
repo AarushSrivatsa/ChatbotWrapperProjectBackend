@@ -23,4 +23,4 @@ pillow
 pytesseract
 pydantic[email]
 alembic
-psycopg2
+psycopg2-binary
