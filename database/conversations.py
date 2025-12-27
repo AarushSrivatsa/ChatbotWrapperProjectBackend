@@ -4,8 +4,10 @@ from database.initializations import ConvoModel, MessageModel
 # SQLAlchemy
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, delete
+from uuid import UUID
 
-async def create_conversation(db: AsyncSession, user_id: int, title: str):
+async def create_conversation(db: AsyncSession, user_id: UUID, title: str):
+
     new_convo = ConvoModel(user_id=user_id, title=title)
     db.add(new_convo)
     await db.commit()
@@ -18,7 +20,7 @@ async def create_conversation(db: AsyncSession, user_id: int, title: str):
         "updated_at": str(new_convo.updated_at) if new_convo.updated_at else None
     }
 
-async def get_user_conversations(db: AsyncSession, user_id: int):
+async def get_user_conversations(db: AsyncSession, user_id: UUID):
     result = await db.execute(
         select(ConvoModel)
         .where(ConvoModel.user_id == user_id)
@@ -35,7 +37,7 @@ async def get_user_conversations(db: AsyncSession, user_id: int):
         for c in convos
     ]
 
-async def delete_conversation_with_cleanup(db: AsyncSession, conversation_id: int, user_id: int):
+async def delete_conversation_with_cleanup(db: AsyncSession, conversation_id: int, user_id: UUID):
 
     result = await db.execute(
         select(ConvoModel).where(

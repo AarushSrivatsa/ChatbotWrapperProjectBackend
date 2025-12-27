@@ -22,3 +22,5 @@ unstructured
 pillow
 pytesseract
 pydantic[email]
+alembic
+psycopg2

@@ -1,11 +1,12 @@
 # SQLAlchemy
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from uuid import UUID
 
 # Database models
 from database.initializations import ConvoModel, MessageModel
 
-async def get_conversation_messages(db: AsyncSession, conversation_id: int, user_id: int):
+async def get_conversation_messages(db: AsyncSession, conversation_id: UUID, user_id: UUID):
 
     convo_result = await db.execute(
         select(ConvoModel).where(
@@ -35,7 +36,7 @@ async def get_conversation_messages(db: AsyncSession, conversation_id: int, user
         for msg in messages
     ]
 
-async def get_recent_messages(db: AsyncSession, conversation_id: int, limit: int = 20):
+async def get_recent_messages(db: AsyncSession, conversation_id: UUID, limit: int = 20):
     """Get recent messages for chat context"""
     result = await db.execute(
         select(MessageModel)
@@ -46,7 +47,7 @@ async def get_recent_messages(db: AsyncSession, conversation_id: int, limit: int
     messages = result.scalars().all()
     return list(reversed(messages))
 
-async def save_chat_messages(db: AsyncSession, conversation_id: int, user_message: str, ai_response: str):
+async def save_chat_messages(db: AsyncSession, conversation_id: UUID, user_message: str, ai_response: str):
     """Save both user and AI messages"""
     user_msg = MessageModel(
         conversation_id=conversation_id,
@@ -72,7 +73,7 @@ async def save_chat_messages(db: AsyncSession, conversation_id: int, user_messag
         "created_at": str(ai_msg.created_at)
     }
 
-async def verify_conversation_access(db: AsyncSession, conversation_id: int, user_id: int):
+async def verify_conversation_access(db: AsyncSession, conversation_id: UUID, user_id: UUID):
     """Check if conversation exists and belongs to user"""
     result = await db.execute(
         select(ConvoModel).where(

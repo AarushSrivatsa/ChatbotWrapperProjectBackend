@@ -23,7 +23,6 @@ async def create_convo(
 ):
     return await create_conversation(db, current_user.id, convo_data.title)
 
-
 @router.get("/", response_model=list[ConvoResponse])
 async def list_conversations(
     current_user = Depends(get_current_user),

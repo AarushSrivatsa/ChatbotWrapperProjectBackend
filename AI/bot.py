@@ -41,9 +41,7 @@ async def get_ai_response(
     query = make_query_rag_tool(conversation_id=conversation_id)
     all_tools = universal_tools + [query]
     agent = create_agent(model=llm, tools=all_tools)
-    full_history = [system_prompt] + chat_history + [HumanMessage(content=user_message)]
-    config = {"recursion_limit": 10}
-    
+    full_history = [system_prompt] + chat_history + [HumanMessage(content=user_message)]  
     try:
         response = await agent.ainvoke({"messages": full_history}, config={
         "recursion_limit": 10,

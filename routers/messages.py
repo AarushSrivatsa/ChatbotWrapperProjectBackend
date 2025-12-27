@@ -1,5 +1,6 @@
 # FastAPI
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
+from fastapi.concurrency import run_in_threadpool
 
 # SQLAlchemy
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -51,11 +52,6 @@ async def post_message(
         messages=messages
     )
     return await save_chat_messages(db, conversation_id, chat_request.message, ai_response)
-    
-
-from fastapi import UploadFile, File, Depends, HTTPException
-from fastapi.concurrency import run_in_threadpool
-from sqlalchemy import select
 
 @router.post("/document")
 async def post_document(

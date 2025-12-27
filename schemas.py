@@ -1,5 +1,6 @@
 # Pydantic
 from pydantic import BaseModel, EmailStr, Field
+from uuid import UUID
 
 class UserRequest(BaseModel):
     email: EmailStr
@@ -11,19 +12,20 @@ class UserRequest(BaseModel):
 
 class Token(BaseModel):
     access_token: str
+    refresh_token: str
     token_type: str
 
 class ConvoCreate(BaseModel):
     title: str = "New Chat"
 
 class ConvoResponse(BaseModel):
-    id: int
+    id: UUID
     title: str
     created_at: str
     updated_at: str | None
 
 class MessageResponse(BaseModel):
-    id: int
+    id: UUID
     role: str
     content: str
     created_at: str
@@ -33,3 +35,7 @@ class ChatRequest(BaseModel):
 
 class AddDocumentRequest(BaseModel):
     text: str
+
+# schemas.py
+class RefreshRequest(BaseModel):
+    refresh_token: str
