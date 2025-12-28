@@ -71,7 +71,7 @@ def add_to_rag(conversation_id: str, file_bytes: bytes, filename: str) -> str:
         
         for doc in split_docs:
             doc.metadata['source'] = filename
-            doc.metadata['conversation_id'] = conversation_id
+            doc.metadata['conversation_id'] = str(conversation_id)
         
         uuids = [str(uuid4()) for _ in range(len(split_docs))]
         vector_store.add_documents(documents=split_docs, ids=uuids)

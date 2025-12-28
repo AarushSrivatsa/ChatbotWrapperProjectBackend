@@ -22,7 +22,7 @@ ACCESS_TOKEN_EXPIRE_HOURS = 24
 REFRESH_TOKEN_EXPIRE_DAYS = 30
 
 # AI Settings
-INDEX_NAME = "chatbot-wrapper-project"
+INDEX_NAME = "chatbot-wrapper-backend"
 EMBEDDING_MODEL = CohereEmbeddings(model="embed-english-v3.0")
 DIMENSIONS = 1024
 CHUNK_SIZE = 400
