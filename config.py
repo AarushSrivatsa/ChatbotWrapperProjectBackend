@@ -24,6 +24,7 @@ REFRESH_TOKEN_EXPIRE_DAYS = 30
 # AI Settings
 INDEX_NAME = "chatbot-wrapper-project"
 EMBEDDING_MODEL = CohereEmbeddings(model="embed-english-v3.0")
+DIMENSIONS = 1024
 CHUNK_SIZE = 400
 CHUNK_OVERLAP = 75
 SEPARATORS = ["\n\n", "\n", ".", ",", " ", ""]

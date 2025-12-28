@@ -20,14 +20,14 @@ from langchain_community.document_compressors import FlashrankRerank
 from langchain_classic.retrievers.contextual_compression import ContextualCompressionRetriever
 
 # App config
-from config import INDEX_NAME, EMBEDDING_MODEL, CHUNK_SIZE, CHUNK_OVERLAP, SEPARATORS, BASE_K, TOP_N, USE_RERANKING, RERANK_MODEL
+from config import INDEX_NAME, EMBEDDING_MODEL, CHUNK_SIZE, CHUNK_OVERLAP, SEPARATORS, BASE_K, TOP_N, USE_RERANKING, RERANK_MODEL, DIMENSIONS
 
 pc = Pinecone()
 
 if not pc.has_index(INDEX_NAME):
     pc.create_index(
         name=INDEX_NAME,
-        dimension=768,
+        dimension=DIMENSIONS,
         metric="cosine",
         spec=ServerlessSpec(cloud="aws", region="us-east-1"),
     )
