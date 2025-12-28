@@ -17,6 +17,7 @@ from routers.auth import hash_password, verify_password, create_tokens
 
 router = APIRouter(prefix="/users", tags=["users"])
 
+@router.post("/register",response_model=TokenResponse)
 async def register(user_request: UserRequest, db: AsyncSession = Depends(get_db)):
     existing_user = await get_user_by_email(db, user_request.email)
     
