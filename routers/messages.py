@@ -53,7 +53,7 @@ async def post_message(
     )
     return await save_chat_messages(db, conversation_id, chat_request.message, ai_response)
 
-@router.post("/document",PostDocumentResponse)
+@router.post("/document",response_model=PostDocumentResponse)
 async def post_document(
     conversation_id: UUID,
     file: UploadFile = File(...),
