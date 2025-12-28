@@ -33,7 +33,7 @@ if not pc.has_index(INDEX_NAME):
     )
 index = pc.Index(INDEX_NAME)
 
-def add_to_rag(conversation_id: int, file_bytes: bytes, filename: str) -> str:
+def add_to_rag(conversation_id: str, file_bytes: bytes, filename: str) -> str:
     """Insert file into vector database for a specific conversation."""
     namespace = str(conversation_id)
     
@@ -82,7 +82,7 @@ def add_to_rag(conversation_id: int, file_bytes: bytes, filename: str) -> str:
         if os.path.exists(tmp_path):
             os.remove(tmp_path)
 
-def make_query_rag_tool(conversation_id: int):
+def make_query_rag_tool(conversation_id: str):
 
     def _rag_runtime(query: str) -> str:
         """Actual RAG logic. Pydantic never inspects this."""
