@@ -1,7 +1,7 @@
 # FastAPI
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from fastapi.concurrency import run_in_threadpool
-
+from uuid import UUID
 # SQLAlchemy
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
@@ -25,7 +25,7 @@ message_limit = 25
 
 @router.get("/", response_model=list[MessageResponse])
 async def get_messages(
-    conversation_id: int,
+    conversation_id: UUID,
     current_user = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
@@ -36,7 +36,7 @@ async def get_messages(
 
 @router.post("/", response_model=MessageResponse)
 async def post_message(
-    conversation_id: int,
+    conversation_id: UUID,
     chat_request: ChatRequest,
     current_user = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
@@ -55,7 +55,7 @@ async def post_message(
 
 @router.post("/document")
 async def post_document(
-    conversation_id: int,
+    conversation_id: UUID,
     file: UploadFile = File(...),
     current_user = Depends(get_current_user),
 ):

@@ -1,6 +1,6 @@
 # FastAPI
 from fastapi import APIRouter, Depends, HTTPException
-
+from uuid import UUID
 # Database
 from sqlalchemy.ext.asyncio import AsyncSession
 from database.initializations import get_db
@@ -32,7 +32,7 @@ async def list_conversations(
 
 @router.delete("/{conversation_id}")
 async def delete_conversation(
-    conversation_id: int,
+    conversation_id: UUID,
     current_user = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
