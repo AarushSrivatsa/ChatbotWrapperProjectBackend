@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 # Schemas
-from schemas import MessageResponse, ChatRequest
+from schemas import MessageResponse, ChatRequest, PostDocumentResponse
 
 # Database
 from database.initializations import get_db, ConvoModel, AsyncSessionLocal
@@ -53,7 +53,7 @@ async def post_message(
     )
     return await save_chat_messages(db, conversation_id, chat_request.message, ai_response)
 
-@router.post("/document")
+@router.post("/document",PostDocumentResponse)
 async def post_document(
     conversation_id: UUID,
     file: UploadFile = File(...),

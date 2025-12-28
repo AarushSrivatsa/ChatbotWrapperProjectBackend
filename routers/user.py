@@ -10,14 +10,13 @@ from database.user import get_user_by_email, create_user
 from datetime import datetime, timezone
 
 # Schemas
-from schemas import UserRequest, Token, RefreshRequest
+from schemas import UserRequest, TokenResponse, RefreshRequest
 
 # Auth
 from routers.auth import hash_password, verify_password, create_tokens
 
 router = APIRouter(prefix="/users", tags=["users"])
 
-@router.post('/register', response_model=Token)
 async def register(user_request: UserRequest, db: AsyncSession = Depends(get_db)):
     existing_user = await get_user_by_email(db, user_request.email)
     
@@ -29,7 +28,7 @@ async def register(user_request: UserRequest, db: AsyncSession = Depends(get_db)
     
     return await create_tokens(new_user.id, db)  # Added await
 
-@router.post("/login", response_model=Token)
+@router.post("/login", response_model=TokenResponse)
 async def login(user_data: UserRequest, db: AsyncSession = Depends(get_db)):
     user = await get_user_by_email(db, user_data.email)
     
@@ -55,7 +54,7 @@ async def logout(
     
     return {"message": "Logged out successfully"}
 
-@router.post("/refresh", response_model=Token)
+@router.post("/refresh", response_model=TokenResponse)
 async def refresh(
     refresh_request: RefreshRequest,
     db: AsyncSession = Depends(get_db)

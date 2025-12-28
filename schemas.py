@@ -10,7 +10,7 @@ class UserRequest(BaseModel):
         description="Password must be at least 8 characters"
     )
 
-class Token(BaseModel):
+class TokenResponse(BaseModel):
     access_token: str
     refresh_token: str
     token_type: str
@@ -36,7 +36,7 @@ class MessageResponse(BaseModel):
 class ChatRequest(BaseModel):
     message: str
 
-class AddDocumentRequest(BaseModel):
+class PostDocumentResponse(BaseModel):
     text: str
 
 # schemas.py
