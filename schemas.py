@@ -24,6 +24,9 @@ class ConvoResponse(BaseModel):
     created_at: str
     updated_at: str | None
 
+class DeleteConvoResponse(BaseModel):
+    result : str
+
 class MessageResponse(BaseModel):
     id: UUID
     role: str

@@ -7,7 +7,7 @@ from database.initializations import get_db
 from database.conversations import create_conversation, get_user_conversations, delete_conversation_with_cleanup
 
 # Schemas
-from schemas import ConvoCreate, ConvoResponse
+from schemas import ConvoCreate, ConvoResponse, DeleteConvoResponse
 
 # Auth & AI
 from routers.auth import get_current_user
@@ -30,7 +30,7 @@ async def list_conversations(
 ):
     return await get_user_conversations(db, current_user.id)
 
-@router.delete("/{conversation_id}")
+@router.delete("/{conversation_id}",response_model=DeleteConvoResponse)
 async def delete_conversation(
     conversation_id: UUID,
     current_user = Depends(get_current_user),
@@ -43,4 +43,4 @@ async def delete_conversation(
         clear_rag(conversation_id)
     except Exception as e:
         print(f"Warning: Failed to clear RAG for conversation {conversation_id}: {e}")
-    return result
+    return {"result":result}

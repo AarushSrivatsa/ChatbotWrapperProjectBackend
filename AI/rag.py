@@ -1,5 +1,4 @@
 # Env & stdlib
-from dotenv import load_dotenv
 import os
 import tempfile
 from uuid import uuid4
