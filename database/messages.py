@@ -1,6 +1,7 @@
 # SQLAlchemy
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.sql import func
 from uuid import UUID
 
 # Database models
@@ -63,6 +64,11 @@ async def save_chat_messages(db: AsyncSession, conversation_id: UUID, user_messa
     
     db.add(user_msg)
     db.add(ai_msg)
+
+    convo = await db.get(ConvoModel, conversation_id)
+    if convo:
+        convo.updated_at = func.now()
+
     await db.commit()
     await db.refresh(ai_msg)
     

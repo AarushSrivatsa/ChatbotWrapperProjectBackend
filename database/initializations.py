@@ -5,7 +5,7 @@ import asyncio
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.orm import declarative_base, relationship
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text, Boolean,text
+from sqlalchemy import Column, String, DateTime, ForeignKey, Text, Boolean,text
 from sqlalchemy.sql import func
 
 # App config
@@ -34,7 +34,10 @@ class ConvoModel(Base):
     user_id = Column(UUID, ForeignKey("users.id"), nullable=False)
     title = Column(String, default="New Chat")
     created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    updated_at = Column(
+        DateTime(timezone=True), 
+        server_default=func.now(),
+        onupdate=func.now())
     user = relationship("UserModel", back_populates="convos")
     messages = relationship("MessageModel", back_populates="convo")
 
