@@ -1,344 +1,198 @@
-# Chatbot Wrapper Backend
+# 🚀 Chatbot Wrapper Project Backend
 
-A production-ready FastAPI backend for a multi-user conversational AI application with advanced retrieval-augmented generation (RAG), web search capabilities, and intelligent document processing.
+Production FastAPI backend with **full async I/O**, advanced RAG pipeline, and quad-mode web intelligence. Built for multi-user scale.
 
----
-
-## 🌟 Overview
-
-This project provides a comprehensive backend API that manages users, conversations, and messages while supporting conversation-scoped retrieval-augmented generation with optional reranking and web search integration. Built with modern Python tools and best practices, it offers a modular, scalable foundation for AI-powered chat applications.
-
-**Key Differentiator:** Unlike typical chatbot backends that focus on either RAG or web search, this system seamlessly integrates both capabilities, allowing conversations to leverage uploaded documents AND real-time web information simultaneously.
+**Live API:** https://chatbotwrapperprojectbackend.onrender.com  
+**Swagger Docs:** https://chatbotwrapperprojectbackend.onrender.com/docs
 
 ---
 
-## ✨ Core Features
+## 💡 What This Actually Does
 
-### Authentication & User Management
-- **JWT-based authentication** with HTTP Bearer tokens
-- Secure user registration and login
-- Password hashing with industry-standard algorithms
-- User-scoped data isolation
+Most chatbot backends give you RAG **or** web search. This gives you **both**, with four different ways to pull information from the web—all in one conversation.
 
-### Conversation Management
-- **Multi-user support** with isolated conversation spaces
-- Create, list, and delete conversations
-- Conversation-level RAG configuration
+**Real scenario:** User uploads their Q3 financial report and asks *"How does our revenue growth compare to industry trends, and what's our competitor's product structure?"*
+
+The system:
+- Extracts revenue data from the uploaded PDF (RAG)
+- Searches the web for current industry benchmarks
+- Crawls analyst sites for specific insights
+- Maps the competitor's entire website structure
+- Returns one coherent answer with all sources cited
+
+Document memory + web intelligence working together. Not separately—**together**.
+
+---
+
+## ⚡ Why It's Fast
+
+**Everything is async:**
+- FastAPI async endpoints
+- Async SQLAlchemy with PostgreSQL
+- Non-blocking database operations
+- Concurrent request handling
+
+When User A uploads a document, User B doesn't wait. When User C runs a web search, Users D and E keep chatting. No blocking, no waiting.
+
+**Provider-agnostic LLM:**
+- Currently running Groq for speed
+- Want OpenAI? Anthropic? One line of code
+- LangChain handles the abstraction
+- Never locked into a vendor
+
+---
+
+## 🏗️ Core Features
+
+### 🔐 Authentication
+- JWT with dual tokens (access + refresh)
+- Secure password hashing
+- Token invalidation on logout
+- **Every user completely isolated**
+
+### 💬 Conversations
+- Multi-user support
+- Create, list, delete conversations
+- Each conversation has its own RAG config
 - Persistent message history
+- **Each conversation gets its own vector namespace in Pinecone**
 
-### Advanced RAG Pipeline
-- **Universal document support** - Upload any document type (PDF, DOCX, TXT, etc.)
-- **Recursive character text splitting** with custom separators for optimal chunk boundaries
-- **Local embeddings** via Ollama (nomic-embed-text:v1.5) - no external API calls
-- **Optional ms-marco-MiniLM-L-12-v2 reranker** for enhanced retrieval precision
-- Configurable chunk size (400 chars) and overlap (75 chars)
-- Similarity-based retrieval with BASE_K=20, refined to TOP_N=5
-- Conversation-scoped vector storage in Pinecone
+### 🧠 RAG Pipeline
 
-### Quad Web Intelligence (Tavily):
-- Search - Real-time queries with AI-ranked results
-- Extract - Clean and get content from given URL
-- Crawl - Graph-based traversal with natural language instructions
-- Map - Complete website structure visualization
+Upload PDF, DOCX, TXT—anything. System handles:
 
-### Message System
-- Text message support
-- Document upload and processing
-- Message history retrieval
+**Processing:**
+- RecursiveCharacterTextSplitter breaks documents intelligently
+- 400-char chunks with 75-char overlap
+- Custom separators preserve semantic boundaries
+
+**Storage:**
+- Cohere Embed English v3.0 generates 1024-dim embeddings
+- Pinecone stores vectors in conversation-scoped namespaces
+- User A's docs never touch User B's docs
+
+**Retrieval:**
+- Query finds top 20 similar chunks (BASE_K=20)
+- Optional FlashRank reranking with ms-marco-MiniLM-L-12-v2 → best 5 (TOP_N=5)
+- Context injected into LLM prompt
+
+```
+Document Upload (User A, Conversation 1)
+    ↓
+Text Extraction
+    ↓
+Split into chunks (400 chars, 75 overlap)
+    ↓
+Generate embeddings (Cohere, 1024-dim)
+    ↓
+Store in Pinecone (namespace: user_A_conv_1)
+    ↓
+User A asks question
+    ↓
+Search vectors (only in user_A_conv_1)
+    ↓
+Get top 20 chunks
+    ↓
+Rerank to best 5 (optional)
+    ↓
+Feed to LLM with context
+    ↓
+Answer
+```
+
+**User B uploads to Conversation 2?** Goes to `user_B_conv_2` namespace. Zero data leakage.
+
+### 🌐 Quad Web Intelligence (Tavily)
+
+🔍 **Search** - Real-time queries, AI-ranked results for LLMs
+
+📄 **Extract** - Pull clean content from URLs, strip the garbage
+
+🕷️ **Crawl** - Navigate sites with natural language ("find all pricing pages")
+
+🗺️ **Map** - Discover entire site structures, visualize URL hierarchies
+
+System picks the right mode automatically.
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Stack
 
-| Category | Technology | Purpose |
-|----------|-----------|---------|
-| **Backend Framework** | FastAPI | High-performance async API |
-| **Authentication** | JWT | Secure token-based auth |
-| **ORM** | SQLAlchemy | Database abstraction layer |
-| **Database** | PostgreSQL (Supabase) | Relational data storage |
-| **Vector Database** | Pinecone | Semantic search & embeddings |
-| **LLM Provider** | Groq | Ultra-fast inference |
-| **Embeddings** | Ollama (nomic-embed-text:v1.5) | Local semantic embeddings |
-| **Reranker** | ms-marco-MiniLM-L-12-v2 | Optional precision reranking |
-| **Text Splitting** | RecursiveCharacterTextSplitter | Intelligent document chunking |
-| **Web Search** | Tavily | Real-time web crawling & search |
-| **Orchestration** | LangChain | RAG pipeline framework |
-
----
-
-## 📁 Project Structure
-
-```text
-ChatbotWrapperProject/
-├── AI/
-│   ├── __init__.py
-│   ├── bot.py
-│   ├── rag.py
-│   └── tools.py
-│
-├── database/
-│   ├── __init__.py
-│   ├── conversations.py
-│   ├── initializations.py
-│   ├── messages.py
-│   └── user.py
-│
-├── routers/
-│   ├── __init__.py
-│   ├── auth.py
-│   ├── conversation.py
-│   ├── messages.py
-│   └── user.py
-│
-├── .venv/
-├── .env
-├── .gitignore
-├── config.py
-├── main.py
-├── README.md
-├── requirements.txt
-└── schemas.py
-```
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Python 3.12+
-- PostgreSQL database (or Supabase account)
-- Pinecone account
-- Groq API key
-- Tavily API key
-- Ollama installed locally (for embeddings)
-
-### Installation
-
-1. **Clone the repository**
-```bash
-git clone <repository-url>
-cd ChatbotWrapperProject
-```
-
-2. **Create virtual environment**
-```bash
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-```
-
-3. **Install dependencies**
-```bash
-pip install -r requirements.txt
-```
-
-4. **Configure environment variables**
-
-Create a `.env` file in the project root:
-
-```env
-DATABASE_URL=postgresql+asyncpg://user:password@host:port/database
-GROQ_API_KEY=your-groq-api-key
-PINECONE_API_KEY=your-pinecone-api-key
-TAVILY_API_KEY=your-tavily-api-key
-```
-
-5. **Configure application settings**
-
-Edit `config.py` for additional configuration:
-
-```python
-# JWT Token Settings
-SECRET_KEY = os.getenv("SECRET_KEY", "change-this-secret-key-in-production")
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_HOURS = 24
-
-# AI Settings
-INDEX_NAME = "chatbot-wrapper-project"
-EMBEDDING_MODEL = OllamaEmbeddings(model="nomic-embed-text:v1.5")
-CHUNK_SIZE = 400
-CHUNK_OVERLAP = 75
-SEPARATORS = ["\n\n", "\n", ".", ",", " ", ""]
-BASE_K = 20
-TOP_N = 5
-USE_RERANKING = False
-RERANK_MODEL = "ms-marco-MiniLM-L-12-v2"
-```
-
-6. **Install Ollama and pull the embedding model**
-```bash
-# Install Ollama (visit https://ollama.ai for your OS)
-# Then pull the embedding model
-ollama pull nomic-embed-text:v1.5
-```
-
-7. **Run the application**
-```bash
-uvicorn main:app --reload
-```
-
-The API will be available at:
-- **Base URL:** `http://localhost:8000`
-- **Interactive docs:** `http://localhost:8000/docs`
-- **ReDoc:** `http://localhost:8000/redoc`
+| Component | Tech |
+|-----------|------|
+| 🚀 Backend | FastAPI (Fully Async) |
+| 🔑 Auth | JWT (Access + Refresh) |
+| 💾 Database | PostgreSQL (Supabase) |
+| ⚙️ ORM | Async SQLAlchemy |
+| 🔍 Vectors | Pinecone |
+| 🤖 LLM | Groq (swap in one line) |
+| 🧮 Embeddings | Cohere Embed English v3.0 |
+| 🎯 Reranker | FlashRank (ms-marco-MiniLM-L-12-v2) |
+| ✂️ Chunking | RecursiveCharacterTextSplitter |
+| 🌐 Web | Tavily |
+| 🔗 Orchestration | LangChain |
 
 ---
 
 ## 📡 API Routes
 
-### Users
-- `POST /users/register` - Register new user
-- `POST /users/login` - Login and get JWT token
+### 💻 Swagger UI
+<img width="1707" height="841" alt="image" src="https://github.com/user-attachments/assets/957201cd-4a56-4d31-9452-57ce6887ad88" />
 
-### Conversations (Protected)
-- `GET /conversations/` - List all conversations for authenticated user
+### 👤 Users
+- `POST /users/register` - Sign up
+- `POST /users/login` - Get access + refresh tokens
+- `POST /users/refresh` - Refresh both tokens
+- `POST /users/logout` - Kill tokens
+
+### 💬 Conversations (Auth Required)
+- `GET /conversations/` - List all conversations
 - `POST /conversations/` - Create new conversation
 - `DELETE /conversations/{conversation_id}` - Delete conversation
 
-### Messages (Protected)
-- `GET /conversations/{conversation_id}/messages/` - Get all messages in conversation
-- `POST /conversations/{conversation_id}/messages/` - Send message and get AI response
-- `POST /conversations/{conversation_id}/messages/document` - Upload document to conversation
+### 📨 Messages (Auth Required)
+- `GET /conversations/{conversation_id}/messages/` - Get message history
+- `POST /conversations/{conversation_id}/messages/` - Send message
+- `POST /conversations/{conversation_id}/messages/document` - Upload document
 
-All protected routes require authentication via Bearer token in the Authorization header.
+**Auth:** Protected routes need `Bearer <token>` in Authorization header
 
----
-
-## 🧠 RAG Pipeline Architecture
-
-```
-Document Upload
-    ↓
-Text Extraction
-    ↓
-Recursive Character Splitting (400 chars, 75 overlap)
-    ↓
-Embedding Generation (Ollama nomic-embed-text:v1.5)
-    ↓
-Vector Storage (Pinecone)
-    ↓
-User Query → Vector Similarity Search
-    ↓
-Top-K Retrieval (BASE_K=20)
-    ↓
-Optional Reranking (ms-marco-MiniLM-L-12-v2, TOP_N=5)
-    ↓
-Context Injection → LLM Generation (Groq)
-```
-
-### RAG Components
-
-#### 1. Document Chunking
-**RecursiveCharacterTextSplitter** ensures intelligent splitting:
-- Preserves semantic boundaries
-- Chunk size: **400 characters**
-- Overlap: **75 characters**
-- Custom separators: `["\n\n", "\n", ".", ",", " ", ""]`
-- Recursive splitting maintains document structure
-
-#### 2. Embedding Generation
-**Ollama nomic-embed-text:v1.5** provides:
-- **Local embedding generation** (no external API calls)
-- High-quality semantic embeddings
-- Fast inference with GPU acceleration (if available)
-- Privacy-preserving (data never leaves your infrastructure)
-- Cost-effective for high-volume applications
-
-#### 3. Vector Storage
-**Pinecone** features:
-- Conversation-scoped namespaces
-- Index name: `chatbot-wrapper-project`
-- Fast similarity search
-- Metadata filtering
-- Scalable to millions of vectors
-
-#### 4. Retrieval & Reranking
-**Two-stage retrieval (optional):**
-1. **Broad retrieval:** BASE_K=**20** candidates from vector search
-2. **Precision reranking:** Optional reranking with **ms-marco-MiniLM-L-12-v2** to TOP_N=**5** most relevant chunks
-
-**Reranking toggle:**
-- Set `USE_RERANKING=True` in `config.py` to enable the reranking stage
-- When disabled, the system returns the top 5 results directly from vector search
-- Reranking improves precision but adds latency
-
-**ms-marco-MiniLM-L-12-v2 advantages:**
-- Cross-encoder architecture for accurate relevance scoring
-- Trained on MS MARCO dataset for passage ranking
-- Lightweight model suitable for real-time applications
-- Significantly improves precision over vector search alone
-
-#### 5. Context Injection
-Retrieved context is injected into the system prompt before sending to Groq LLM for generation.
-
----
-
-## 🌐 Web Search Integration
-
-### Tavily Features
-
-- **Real-time search:** Query the web for current information
-- **Content extraction:** Clean, formatted content from web pages
-- **Source tracking:** Maintain citation information
-- **Result synthesis:** Combine multiple sources intelligently
-
-### Use Cases
-
-1. **Current Events:** Questions requiring up-to-date information
-2. **Fact Checking:** Verify information against web sources
-3. **Supplemental Context:** Enhance RAG responses with web data
-4. **Research Queries:** Gather information from multiple sources
-
----
-
-## ⚙️ Configuration
-
-### Environment Variables (.env)
-
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `DATABASE_URL` | ✅ | PostgreSQL connection string |
-| `GROQ_API_KEY` | ✅ | Groq API key for LLM |
-| `PINECONE_API_KEY` | ✅ | Pinecone API key |
-| `TAVILY_API_KEY` | ✅ | Tavily API key |
-
-### Application Settings (config.py)
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `SECRET_KEY` | - | JWT secret key |
-| `ALGORITHM` | HS256 | JWT algorithm |
-| `ACCESS_TOKEN_EXPIRE_HOURS` | 24 | Token expiration (hours) |
-| `INDEX_NAME` | chatbot-wrapper-project | Pinecone index name |
-| `CHUNK_SIZE` | 400 | Text chunk size |
-| `CHUNK_OVERLAP` | 75 | Chunk overlap |
-| `BASE_K` | 20 | Initial retrieval count |
-| `TOP_N` | 5 | Final result count |
-| `USE_RERANKING` | False | Enable reranking |
-| `RERANK_MODEL` | ms-marco-MiniLM-L-12-v2 | Reranker model |
+**Try it live:** https://chatbotwrapperprojectbackend.onrender.com/docs
 
 ---
 
 ## 🔒 Security
 
-- **Password Hashing:** All passwords hashed using secure algorithms
-- **JWT Tokens:** 24-hour token expiration
-- **User Isolation:** Strict database-level access controls
-- **Input Validation:** Pydantic schemas validate all inputs
-- **SQL Injection Protection:** SQLAlchemy ORM prevents injection attacks
+- Passwords hashed with industry standards
+- JWT tokens expire
+- Database-level user isolation
+- Pydantic validates all inputs
+- SQLAlchemy prevents injection
 
 ---
 
-## 🙏 Acknowledgments
+## 🎯 The Architecture
 
-- **FastAPI** for the excellent web framework
-- **LangChain** for RAG orchestration tools
-- **Groq** for lightning-fast inference
-- **Ollama** for local embedding generation
-- **Pinecone** for vector database infrastructure
-- **Tavily** for web search capabilities
-- **ms-marco-MiniLM-L-12-v2** for optional reranking
+**User Isolation:** Every user's data completely separate. Conversations scoped to users. Documents scoped to conversations. No cross-contamination.
+
+**RAG + Web Search:** Not one or the other—both. Documents provide context, web search provides current info. Combined intelligently.
+
+**Flexibility:** Swap LLM providers in one line. Toggle reranking on/off. Configure chunk sizes. Change retrieval parameters. Built to adapt.
+
+**Speed:** Async everything. Non-blocking I/O. Concurrent requests. Multiple users hitting the API simultaneously? No problem.
 
 ---
 
-**Built with modern Python tools and best practices.**
+## 🙏 Built With
+
+- **FastAPI** - Async web framework
+- **LangChain** - RAG orchestration + LLM abstraction
+- **Groq** - Fast inference
+- **Cohere** - Quality embeddings
+- **Pinecone** - Vector storage
+- **Tavily** - Web intelligence
+- **FlashRank** - Ultra-fast reranking (ms-marco-MiniLM-L-12-v2 model)
+
+---
+
+**Modern async Python with production-grade architecture.**
