@@ -10,8 +10,8 @@ app = FastAPI(
     title="Chatbot Wrapper Backend",
     description="""
 Built by **Aarush Srivatsa**  
-GitHub: https://github.com/AarushSrivatsa  
-Linkedin: https://www.linkedin.com/in/aarushsrivatsa/
+GitHub Docs Link: https://github.com/AarushSrivatsa/Chatbot-Wrapper-Project-Backend-OpenDocs
+Linkedin Profile: https://www.linkedin.com/in/aarushsrivatsa/
 """)
 
 app.include_router(user_router)
