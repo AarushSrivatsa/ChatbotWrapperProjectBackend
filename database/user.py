@@ -1,8 +1,7 @@
-# SQLAlchemy
+
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-# Database models
 from database.initializations import UserModel
 
 async def get_user_by_email(db: AsyncSession, email: str):

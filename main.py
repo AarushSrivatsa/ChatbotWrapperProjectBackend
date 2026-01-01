@@ -1,7 +1,6 @@
-# FastAPI
+
 from fastapi import FastAPI
 
-# Routers
 from routers.user import router as user_router
 from routers.conversation import router as conversation_router
 from routers.messages import router as message_router

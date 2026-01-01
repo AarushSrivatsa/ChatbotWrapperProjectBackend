@@ -1,23 +1,19 @@
-# Stdlib
+
 from datetime import datetime, timedelta, timezone
 import secrets
 import hashlib
 
-# Security / auth
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
 from jose import jwt
 
-# FastAPI
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
-# Database
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from uuid import UUID  # Add this
+from uuid import UUID  
 
-# App config & models
 from config import ACCESS_TOKEN_EXPIRE_HOURS, SECRET_KEY, ALGORITHM, REFRESH_TOKEN_EXPIRE_DAYS
 from database.initializations import get_db, UserModel, RefreshTokenModel
 

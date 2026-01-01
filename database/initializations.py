@@ -1,14 +1,12 @@
-# Stdlib
+
 import asyncio
 
-# SQLAlchemy core / ORM
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.orm import declarative_base, relationship
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy import Column, String, DateTime, ForeignKey, Text, Boolean,text
 from sqlalchemy.sql import func
 
-# App config
 from config import DATABASE_URL
 
 engine = create_async_engine(url=DATABASE_URL,echo=True,pool_pre_ping=True,pool_recycle=1800,connect_args={"ssl": "require"})

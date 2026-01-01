@@ -27,7 +27,7 @@ async def register(user_request: UserRequest, db: AsyncSession = Depends(get_db)
     hashed_pw = hash_password(user_request.password)
     new_user = await create_user(db, user_request.email, hashed_pw)
     
-    return await create_tokens(new_user.id, db)  # Added await
+    return await create_tokens(new_user.id, db)
 
 @router.post("/login", response_model=TokenResponse)
 async def login(user_data: UserRequest, db: AsyncSession = Depends(get_db)):
@@ -36,7 +36,7 @@ async def login(user_data: UserRequest, db: AsyncSession = Depends(get_db)):
     if not user or not verify_password(user.hashed_password, user_data.password):
         raise HTTPException(status_code=401, detail="Invalid email or password")
     
-    return await create_tokens(user.id, db)  # Already correct
+    return await create_tokens(user.id, db)  
 
 @router.post("/logout")
 async def logout(

@@ -1,10 +1,9 @@
-# SQLAlchemy
+
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.sql import func
 from uuid import UUID
 
-# Database models
 from database.initializations import ConvoModel, MessageModel
 
 async def get_conversation_messages(db: AsyncSession, conversation_id: UUID, user_id: UUID):

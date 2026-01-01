@@ -1,23 +1,18 @@
-# FastAPI
+
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from fastapi.concurrency import run_in_threadpool
 from uuid import UUID
 
-# SQLAlchemy
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-# Schemas
 from schemas import MessageResponse, ChatRequest, PostDocumentResponse
 
-# Database
 from database.initializations import get_db, ConvoModel, AsyncSessionLocal
 from database.messages import get_conversation_messages, get_recent_messages, save_chat_messages, verify_conversation_access
 
-# Auth
 from routers.auth import get_current_user
 
-# AI
 from AI.bot import get_ai_response
 from AI.rag import add_to_rag
 
