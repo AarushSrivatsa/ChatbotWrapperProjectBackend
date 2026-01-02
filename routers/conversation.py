@@ -8,7 +8,7 @@ from database.conversations import create_conversation, get_user_conversations, 
 
 from schemas import ConvoCreate, ConvoResponse, DeleteConvoResponse
 
-from routers.auth import get_current_user
+from utils.auth import get_current_user
 from AI.rag import clear_rag
 
 router = APIRouter(prefix='/conversations',tags=['conversations'])

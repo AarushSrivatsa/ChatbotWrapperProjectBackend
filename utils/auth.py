@@ -14,7 +14,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from uuid import UUID  
 
-from config import ACCESS_TOKEN_EXPIRE_HOURS, SECRET_KEY, ALGORITHM, REFRESH_TOKEN_EXPIRE_DAYS
+from utils.config import ACCESS_TOKEN_EXPIRE_HOURS, SECRET_KEY, ALGORITHM, REFRESH_TOKEN_EXPIRE_DAYS
 from database.initializations import get_db, UserModel, RefreshTokenModel
 
 ph = PasswordHasher()

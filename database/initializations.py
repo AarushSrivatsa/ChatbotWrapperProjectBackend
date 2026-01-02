@@ -4,10 +4,11 @@ import asyncio
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.orm import declarative_base, relationship
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import Column, String, DateTime, ForeignKey, Text, Boolean,text
+from sqlalchemy import Column, String, DateTime, ForeignKey, Text, Boolean,text, Integer
 from sqlalchemy.sql import func
+from datetime import datetime, timezone
 
-from config import DATABASE_URL
+from utils.config import DATABASE_URL
 
 engine = create_async_engine(url=DATABASE_URL,echo=True,pool_pre_ping=True,pool_recycle=1800,connect_args={"ssl": "require"})
 AsyncSessionLocal = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
@@ -59,12 +60,22 @@ class RefreshTokenModel(Base):
     )
     token_hash = Column(String, nullable=False)
     expires_at = Column(DateTime(timezone=True), nullable=False)
-    revoked = Column(Boolean, default=False)
+    is_revoked = Column(Boolean, default=False)
     created_at = Column(
         DateTime(timezone=True),
         server_default=func.now()
     )
     user = relationship("UserModel")
+
+class OTPVerificationModel(Base):
+    __tablename__ = "otp_verifications"
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, index=True, nullable=False)
+    otp_code = Column(String(6), nullable=False)
+    hashed_password = Column(String, nullable=False)
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    expires_at = Column(DateTime(timezone=True), nullable=False)
+    is_used = Column(Boolean, default=False)
 
 async def create_tables():
     async with engine.begin() as conn:

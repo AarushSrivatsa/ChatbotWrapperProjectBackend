@@ -28,3 +28,8 @@ BASE_K = 20
 TOP_N = 5
 USE_RERANKING = False
 RERANK_MODEL = "ms-marco-MiniLM-L-12-v2"
+
+SMTP_EMAIL = os.getenv("SMTP_EMAIL")
+SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
+SMTP_PORT = 587
+SMTP_SERVER = "smtp.gmail.com"

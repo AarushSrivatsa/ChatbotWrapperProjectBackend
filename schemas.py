@@ -1,14 +1,29 @@
-
 from pydantic import BaseModel, EmailStr, Field
 from uuid import UUID
 
-class UserRequest(BaseModel):
+class SendOTPRequest(BaseModel):
     email: EmailStr
     password: str = Field(
         min_length=8,
         max_length=128,
         description="Password must be at least 8 characters"
     )
+class VerifyOTPRequest(BaseModel):
+    otp: str = Field(..., min_length=6, max_length=6)
+
+class LoginRequest(BaseModel):
+    email: EmailStr
+    password: str = Field(..., min_length=8, max_length=128)
+
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+class ResetPasswordRequest(BaseModel):
+    otp: str = Field(..., min_length=6, max_length=6)
+    new_password: str = Field(..., min_length=8, max_length=128)
+
+class RefreshTokenRequest(BaseModel):
+    refresh_token: str
 
 class TokenResponse(BaseModel):
     access_token: str
@@ -38,7 +53,3 @@ class ChatRequest(BaseModel):
 
 class PostDocumentResponse(BaseModel):
     text: str
-
-# schemas.py
-class RefreshRequest(BaseModel):
-    refresh_token: str
