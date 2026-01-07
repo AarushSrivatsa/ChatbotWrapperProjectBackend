@@ -9,7 +9,7 @@ python-jose
 fastapi
 uvicorn
 langchain-tavily
-langchain-ollama
+langchain_ollama
 langchain-pinecone
 pinecone
 langchain_text_splitters
