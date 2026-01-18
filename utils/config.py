@@ -1,4 +1,3 @@
-
 import os
 
 from dotenv import load_dotenv
@@ -9,7 +8,6 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
-COHERE_API_KEY = os.getenv("COHERE_API_KEY")
 
 SECRET_KEY = os.getenv("SECRET_KEY", "change-this-secret-key-in-production")
 ALGORITHM = "HS256"
