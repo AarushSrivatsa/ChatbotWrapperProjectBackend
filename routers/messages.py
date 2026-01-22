@@ -8,7 +8,8 @@ from sqlalchemy import select
 
 from schemas import MessageResponse, ChatRequest, PostDocumentResponse
 
-from database.initializations import get_db, ConvoModel, AsyncSessionLocal
+from database.schemas import ConvoModel, AsyncSessionLocal
+from database.initialization import get_db
 from database.messages import get_conversation_messages, get_recent_messages, save_chat_messages, verify_conversation_access
 
 from utils.auth import get_current_user

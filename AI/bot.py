@@ -6,7 +6,7 @@ from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 from AI.rag import make_query_rag_tool
 from AI.tools import universal_tools
 
-from database.initializations import MessageModel
+from database.schemas import MessageModel
 
 llm = ChatGroq(model="moonshotai/kimi-k2-instruct-0905", temperature=0.2)
 

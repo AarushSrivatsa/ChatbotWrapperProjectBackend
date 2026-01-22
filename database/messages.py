@@ -4,7 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.sql import func
 from uuid import UUID
 
-from database.initializations import ConvoModel, MessageModel
+from database.schemas import ConvoModel, MessageModel
 
 async def get_conversation_messages(db: AsyncSession, conversation_id: UUID, user_id: UUID):
 

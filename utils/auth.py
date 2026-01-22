@@ -14,8 +14,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from uuid import UUID  
 
-from utils.config import ACCESS_TOKEN_EXPIRE_HOURS, SECRET_KEY, ALGORITHM, REFRESH_TOKEN_EXPIRE_DAYS
-from database.initializations import get_db, UserModel, RefreshTokenModel
+from utils.config import ACCESS_TOKEN_EXPIRE_HOURS, SECRET_KEY, ALGORITHM, REFRESH_TOKEN_EXPIRE_DAYS 
+from database.initialization import get_db
+from database.schemas import RefreshTokenModel, UserModel
 
 ph = PasswordHasher()
 security = HTTPBearer()

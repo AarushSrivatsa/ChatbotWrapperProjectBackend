@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from database.initializations import get_db
+from database.initialization import get_db
 from database.conversations import create_conversation, get_user_conversations, delete_conversation_with_cleanup
 
 from schemas import ConvoCreate, ConvoResponse, DeleteConvoResponse

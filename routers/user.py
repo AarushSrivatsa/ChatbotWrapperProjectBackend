@@ -1,7 +1,8 @@
 from fastapi import APIRouter, status, BackgroundTasks, Depends, HTTPException
 from schemas import SendOTPRequest, VerifyOTPRequest, LoginRequest, RefreshTokenRequest, ForgotPasswordRequest, ResetPasswordRequest
 from sqlalchemy.ext.asyncio import AsyncSession
-from database.initializations import get_db, UserModel, OTPVerificationModel, RefreshTokenModel
+from database.schemas import UserModel, OTPVerificationModel, RefreshTokenModel
+from database.initialization import get_db
 from sqlalchemy import select
 from datetime import datetime, timezone, timedelta
 from utils.auth import hash_password, create_tokens, verify_password, hash_refresh_token

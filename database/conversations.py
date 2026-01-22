@@ -1,5 +1,5 @@
 # Database models
-from database.initializations import ConvoModel, MessageModel
+from database.schemas import ConvoModel, MessageModel
 
 # SQLAlchemy
 from sqlalchemy.ext.asyncio import AsyncSession
