@@ -8,10 +8,10 @@ from routers.messages import router as message_router
 app = FastAPI(
     title="Chatbot Wrapper Backend",
     description="""
-Built by **Aarush Srivatsa**  
+Built by **Aarush Srivatsa**
 GitHub Docs Link: https://github.com/AarushSrivatsa/Chatbot-Wrapper-Project-Backend-OpenDocs
 Linkedin Profile: https://www.linkedin.com/in/aarushsrivatsa/
-""")
+    """)
 
 app.include_router(user_router)
 app.include_router(conversation_router)
