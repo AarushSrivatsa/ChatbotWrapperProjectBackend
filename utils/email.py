@@ -9,7 +9,6 @@ def generate_otp(length: int = 6) -> str:
     digits = "0123456789"
     return "".join(secrets.choice(digits) for _ in range(length))
 
-
 def send_otp_email(email: str, otp: str):
     try:
         msg = MIMEMultipart("alternative")
